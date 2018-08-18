@@ -1,3 +1,4 @@
-search_file_name:\w+dp_fpga.case
-tv_bin_OffsetofCc:67108864
-generate_file_name:onl_cg0_c0_dp_fpga.case
+search_bin_name = onl_cg0_c0_dp_fpga.case
+output_multcc_bin_foldername = D:\multi_cc_case\
+output_multicc_bin_name = onl_cg0_c0_dp_fpga.case
+byte_offset_for_cc = 33554432

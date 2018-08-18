@@ -1,0 +1,2 @@
+D:\git_clone\small_tools_develop\bin_generator\FDD\Case0000\; D:\git_clone\small_tools_develop\bin_generator\TDD\Case0000\
+D:\git_clone\small_tools_develop\bin_generator\FDD\Case0001\; D:\git_clone\small_tools_develop\bin_generator\TDD\Case0001\;

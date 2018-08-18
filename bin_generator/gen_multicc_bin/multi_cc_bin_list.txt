@@ -1,1 +1,3 @@
-W:\Link_TV\Basic\FDD-cases\Case1100\ONL\; W:\Link_TV\Basic\FDD-cases\Case1101\ONL\;
+D:\tool\gen_mulitcc_bin\FDD\Case0000\; D:\tool\gen_mulitcc_bin\TDD\Case0000\;
+D:\tool\gen_mulitcc_bin\TDD\Case0000\; D:\tool\gen_mulitcc_bin\FDD\Case0000\;
+D:\tool\gen_mulitcc_bin\FDD\Case0000\; D:\tool\gen_mulitcc_bin\TDD\Case0000\;D:\tool\gen_mulitcc_bin\FDD\Case0000\;

@@ -1,0 +1,4 @@
+search_bin_name = afc_fpga_vect.bin
+output_multcc_bin_foldername = D:\multi_cc_case\
+output_multicc_bin_name = afc_fpga_vect.bin
+byte_offset_for_cc = 33554432
