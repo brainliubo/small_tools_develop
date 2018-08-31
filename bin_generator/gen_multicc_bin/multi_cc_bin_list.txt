@@ -1,3 +1,0 @@
-D:\tool\gen_mulitcc_bin\FDD\Case0000\; D:\tool\gen_mulitcc_bin\TDD\Case0000\;
-D:\tool\gen_mulitcc_bin\TDD\Case0000\; D:\tool\gen_mulitcc_bin\FDD\Case0000\;
-D:\tool\gen_mulitcc_bin\FDD\Case0000\; D:\tool\gen_mulitcc_bin\TDD\Case0000\;D:\tool\gen_mulitcc_bin\FDD\Case0000\;

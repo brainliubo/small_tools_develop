@@ -38,17 +38,20 @@ def process_multicc_bin():
         os.remove(multicc_case_file_name)
     multicc_case_f = open(multicc_case_file_name, "w")
 
-    with open("multi_cc_bin_list.txt","r") as f:
+    with open("fpga_test_case_list-CA.txt","r") as f:
         origin_list = f.readlines()
         for item in origin_list:
             tv_bin_find_cnt = 0 #每一行处理时都要清0
             item = item.strip("\n")
-            bin_folder_list = item.strip(";").split(";")#读出来一行，确定几个CC的case需要合并
-            cc_num = len(bin_folder_list)
+            input_bin_folder_list = item.strip( ).split(" ")#读出来一行，确定几个CC的case需要合并
+            cc_num = len(input_bin_folder_list)-2
             #generate the new folder name
             final_folder_name_list = []
             final_folder_prefix_list = []
             final_floder_prefix_set = []
+            bin_folder_list = []
+            for i in range(cc_num ):
+                bin_folder_list.append(input_bin_folder_list[i])
 
             final_folder_name = ""
             final_folder_name_prefix = ""
@@ -67,7 +70,7 @@ def process_multicc_bin():
             #每个case按照原来的输入顺序保留CASE名
             #final_folder_prefix_set =  list(set(final_folder_prefix_list))
             #final_folder_prefix_set.sort(key=final_folder_prefix_list.index)
-
+            '''
             #生成文件夹的前缀和名字
             final_folder_name_tuple = zip(final_folder_prefix_list,final_folder_name_list)
             for i in final_folder_name_tuple:
@@ -78,9 +81,12 @@ def process_multicc_bin():
 
             final_folder_name = final_folder_name[0:len(final_folder_name)-1]
             final_folder_name = cfg_dict["output_multcc_bin_foldername"] + final_folder_name
+            '''
+            final_folder_name = input_bin_folder_list[len(input_bin_folder_list)-2]
             # 生成输出文件夹
             try:
-                os.mkdir(final_folder_name)
+                if not os.path.exists(final_folder_name):
+                    os.makedirs(final_folder_name)
             except Exception as e:
                 pass
 
@@ -113,7 +119,7 @@ def process_multicc_bin():
                                 final_f.seek(int(cfg_dict["byte_offset_for_cc"]) * tv_bin_find_cnt,0)
                 if (cc_num == tv_bin_find_cnt):
                     print("cc_num = {0},detect valid bin num = {1}".format(cc_num,tv_bin_find_cnt),file=f_log)
-                    print(final_folder_name + "\\",file = multicc_case_f)
+                    print(final_folder_name ,file = multicc_case_f)
                     print("--------------------------------PASS--------------------------------",file = f_log)
                 else:
                     print("****error****,cc_num = {0},detect valid bin num = {1}".format(cc_num, tv_bin_find_cnt),file=f_log)
