@@ -37,6 +37,13 @@ def process_multicc_bin():
     #使用正则表达式进行编译，用于后面搜索相应的case
     bin_re_str = cfg_dict["search_bin_name"]
     bin_re = re.compile(bin_re_str)
+    try:
+        if not os.path.exists(cfg_dict["output_multcc_bin_foldername"]):
+            os.makedirs(cfg_dict["output_multcc_bin_foldername"])
+    except Exception as e:
+        print("output_multcc_bin_foldername in cfg_file.txt is wrong\n")
+
+
     multicc_case_file_name = cfg_dict["output_multcc_bin_foldername"] + "multicc_case.txt"
     if os.path.exists(multicc_case_file_name):
         os.remove(multicc_case_file_name)
@@ -97,7 +104,7 @@ def process_multicc_bin():
                     if not os.path.exists(final_folder_name):
                         os.makedirs(final_folder_name)
                 except Exception as e:
-                    pass
+                    print("{} in fpga_test_case_list-CA.txt is wrong\n".format(final_folder_name))
                 
                 # 在每个文件夹下面打开一个log文件，记录每次合并TV时的log
                 f_log = open(final_folder_name + "/case_combine.log", "a")
