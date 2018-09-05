@@ -14,6 +14,7 @@ cfg_dict = {}
 bin_re_str = ""
 input_combine_case_num = 0
 output_combined_case_num = 0
+cfg_txt_line_num = 0
 
 
 # 读取cfg文件中的参数，包括原始输入文件，输出文件，各个CC的向量偏移地址
@@ -33,6 +34,7 @@ def process_multicc_bin():
     global tv_bin_find_cnt
     global input_combine_case_num
     global output_combined_case_num
+    global cfg_txt_line_num
 
     #使用正则表达式进行编译，用于后面搜索相应的case
     bin_re_str = cfg_dict["search_bin_name"]
@@ -55,7 +57,8 @@ def process_multicc_bin():
         output_combined_case_num = 0
         for item in origin_list:
             tv_bin_find_cnt = 0 #每一行处理时都要清0
-            item = item.strip("\n")
+            item = item.strip("\n").strip(" ") #排除掉某一行中有空格的问题
+            cfg_txt_line_num = cfg_txt_line_num + 1
             if 0 != len(item):
                 input_combine_case_num = input_combine_case_num + 1
                 input_bin_folder_list = item.strip( ).split(" ")#读出来一行，确定几个CC的case需要合并
@@ -99,12 +102,13 @@ def process_multicc_bin():
                 final_folder_name = cfg_dict["output_multcc_bin_foldername"] + final_folder_name
                 '''
                 final_folder_name = input_bin_folder_list[len(input_bin_folder_list)-2]
+                final_folder_name = final_folder_name + "ONL\\"
                 # 生成输出文件夹
                 try:
                     if not os.path.exists(final_folder_name):
                         os.makedirs(final_folder_name)
                 except Exception as e:
-                    print("{} in fpga_test_case_list-CA.txt is wrong\n".format(final_folder_name))
+                    print("linenum:{},{} in fpga_test_case_list-CA.txt is wrong\n".format(cfg_txt_line_num,final_folder_name))
                 
                 # 在每个文件夹下面打开一个log文件，记录每次合并TV时的log
                 f_log = open(final_folder_name + "/case_combine.log", "a")
@@ -121,6 +125,7 @@ def process_multicc_bin():
                 
                     for folder_name in bin_folder_list:
                         folder_name = folder_name.strip("\n").strip()
+                        folder_name = folder_name + "ONL\\" #在输入目录下的ONL文件夹下寻找要合并的文件
                         print("process folder:{0}".format(folder_name),file = f_log)
                         file_list = (os.listdir(folder_name))     #find the folder's file list
                         for file_name in file_list:
@@ -141,10 +146,10 @@ def process_multicc_bin():
                     else:
                         print("****error****,cc_num = {0},detect valid bin num = {1}".format(cc_num, tv_bin_find_cnt),file=f_log)
                         print("--------------------------------FAIL--------------------------------", file=f_log)
-                        print(" {0} can't find enough bin file to combine, pls check it!\n".format(final_folder_name))
+                        print(" linenum:{0},{1} can't find enough bin file to combine, pls check it!\n".format(cfg_txt_line_num,final_folder_name))
                 except Exception as e:
                     print("******exception,pls check the input case folder path************", file=f_log)
-                    print("******case %s exception occurs,pls check the input case folder path************", final_folder_name)
+                    print("******linenum:{},{} exception occurs,pls check the input case folder************\n".format(cfg_txt_line_num, final_folder_name))
                 
                 f_log.close()
     #写完关闭
