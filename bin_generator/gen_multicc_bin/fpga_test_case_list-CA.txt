@@ -1,3 +1,11 @@
+@echo
+
+set path=c:\cygwin\bin;%path%
+
+D:\git_clone\small_tools_develop\bin_generator\FDD\Case0000\ D:\git_clone\small_tools_develop\bin_generator\TDD\Case0000\ D:\FDDCase0000_TDDCase0000\
+
+D:\git_clone\small_tools_develop\bin_generator\FDD\Case0000\ D:\git_clone\small_tools_develop\bin_generator\TDD\Case0000\ D:\FDDCase0000_TDDCase0000\ D:\FDDCase0000_TDDCase0000\
+D:\git_clone\small_tools_develop\bin_generator\FDD\Case0000\ D:\git_clone\small_tools_develop\bin_generator\TDD\Case0000\ D:\FDDCase0000_TDDCase0000\ D:\FDDCase0000_TDDCase0000\ 10
 D:\git_clone\small_tools_develop\bin_generator\FDD\Case0000\ D:\git_clone\small_tools_develop\bin_generator\TDD\Case0000\ D:\FDDCase0000_TDDCase0000\ 10
 D:\git_clone\small_tools_develop\bin_generator\TDD\Case0000\ D:\git_clone\small_tools_develop\bin_generator\FDD\Case0000\ D:\TDDCase0000_FDDCase0000\ 10
 D:\git_clone\small_tools_develop\bin_generator\TDD\Case0000\ D:\git_clone\small_tools_develop\bin_generator\FDD\Case0000\ D:\git_clone\small_tools_develop\bin_generator\FDD\Case0000\ D:\TDDCase0000_FDDCase0000_tdd0000\ 10

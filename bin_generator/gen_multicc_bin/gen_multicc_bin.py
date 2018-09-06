@@ -60,16 +60,31 @@ def process_multicc_bin():
             item = item.strip("\n").strip(" ") #排除掉某一行中有空格的问题
             cfg_txt_line_num = cfg_txt_line_num + 1
             if 0 != len(item):
-                input_combine_case_num = input_combine_case_num + 1
                 input_bin_folder_list = item.strip( ).split(" ")#读出来一行，确定几个CC的case需要合并
-                cc_num = len(input_bin_folder_list)-2
+                path_length = len(input_bin_folder_list)
+                cc_num = path_length - 2
                #generate the new folder name
                 final_folder_name_list = []
                 final_folder_prefix_list = []
                 final_floder_prefix_set = []
                 bin_folder_list = []
+
+                #检查路径的个数是否合理
+
+                if (cc_num < 2):
+                    print("input path's format in fpga_test_case_list-CA.txt linenum:{} is wrong，pls refer to the userguide Ch 3.1!\n".format(cfg_txt_line_num))
+                    continue
+                try:
+                    int(input_bin_folder_list[path_length - 1])
+                except Exception as e:
+                    print("the last string in fpga_test_case_list-CA.txt linenum:{} should be a number".format(cfg_txt_line_num))
+                    continue
+
+                input_combine_case_num = input_combine_case_num + 1
                 for i in range(cc_num ):
                     bin_folder_list.append(input_bin_folder_list[i])
+
+
                 
                 final_folder_name = ""
                 final_folder_name_prefix = ""
@@ -101,15 +116,25 @@ def process_multicc_bin():
                 final_folder_name = final_folder_name[0:len(final_folder_name)-1]
                 final_folder_name = cfg_dict["output_multcc_bin_foldername"] + final_folder_name
                 '''
-                final_folder_name = input_bin_folder_list[len(input_bin_folder_list)-2]
+                #检查输入的目录是否正确
+                try:
+                    for dir_path in bin_folder_list:
+                        if not os.path.exists(dir_path):
+                            raise Exception(dir_path)
+                except Exception as e:
+                    print("input path {0} in fpga_test_case_list-CA.txt linenum:{1} is not exist!\n".format(e,cfg_txt_line_num))
+                    continue
+
+                final_folder_name = input_bin_folder_list[len(input_bin_folder_list) - 2]
                 final_folder_name = final_folder_name + "ONL\\"
                 # 生成输出文件夹
                 try:
                     if not os.path.exists(final_folder_name):
                         os.makedirs(final_folder_name)
                 except Exception as e:
-                    print("linenum:{},{} in fpga_test_case_list-CA.txt is wrong\n".format(cfg_txt_line_num,final_folder_name))
-                
+                    print("{0} in fpga_test_case_list-CA.txt linenum:{1} is wrong\n".format(final_folder_name,cfg_txt_line_num))
+                    continue
+
                 # 在每个文件夹下面打开一个log文件，记录每次合并TV时的log
                 f_log = open(final_folder_name + "/case_combine.log", "a")
                 
@@ -127,17 +152,20 @@ def process_multicc_bin():
                         folder_name = folder_name.strip("\n").strip()
                         folder_name = folder_name + "ONL\\" #在输入目录下的ONL文件夹下寻找要合并的文件
                         print("process folder:{0}".format(folder_name),file = f_log)
-                        file_list = (os.listdir(folder_name))     #find the folder's file list
-                        for file_name in file_list:
-                            m = re.match(bin_re,file_name)     #find the dp_fpga.case
-                            if m is not None:
-                                case_path = folder_name + m.group()   #form the path
-                                print("find match file path = {0}".format(case_path),file = f_log)
-                                tv_bin_find_cnt= tv_bin_find_cnt +1
-                                with open(case_path,"rb") as f_bin:
-                                    print("fill the bin to the output file at address:{0}\n".format(hex(final_f.tell())), file=f_log)
-                                    final_f.write(f_bin.read())
-                                    final_f.seek(int(cfg_dict["byte_offset_for_cc"]) * tv_bin_find_cnt,0)
+                        if os.path.exists(folder_name):      #检查目录是否正确
+                            file_list = (os.listdir(folder_name))     #find the folder's file list
+                            for file_name in file_list:
+                                m = re.match(bin_re,file_name)     #find the dp_fpga.case
+                                if m is not None:
+                                    case_path = folder_name + m.group()   #form the path
+                                    print("find match file path = {0}".format(case_path),file = f_log)
+                                    tv_bin_find_cnt= tv_bin_find_cnt +1
+                                    with open(case_path,"rb") as f_bin:
+                                        print("fill the bin to the output file at address:{0}\n".format(hex(final_f.tell())), file=f_log)
+                                        final_f.write(f_bin.read())
+                                        final_f.seek(int(cfg_dict["byte_offset_for_cc"]) * tv_bin_find_cnt,0)
+                        else:
+                            print("linenum:{0},input_path:{1} is wrong!".format(cfg_txt_line_num,folder_name))
                     if (cc_num == tv_bin_find_cnt):
                         output_combined_case_num = output_combined_case_num + 1
                         print("cc_num = {0},detect valid bin num = {1}".format(cc_num,tv_bin_find_cnt),file=f_log)
@@ -146,7 +174,7 @@ def process_multicc_bin():
                     else:
                         print("****error****,cc_num = {0},detect valid bin num = {1}".format(cc_num, tv_bin_find_cnt),file=f_log)
                         print("--------------------------------FAIL--------------------------------", file=f_log)
-                        print(" linenum:{0},{1} can't find enough bin file to combine, pls check it!\n".format(cfg_txt_line_num,final_folder_name))
+                        print("linenum:{0},{1} can't find enough bin file to combine, pls check it!\n".format(cfg_txt_line_num,final_folder_name))
                 except Exception as e:
                     print("******exception,pls check the input case folder path************", file=f_log)
                     print("******linenum:{},{} exception occurs,pls check the input case folder************\n".format(cfg_txt_line_num, final_folder_name))
@@ -158,7 +186,8 @@ def process_multicc_bin():
 
 
 if __name__ == "__main__":
-
+    print("gen_multi_cc: version:2018-09-06,author:brain.liu")
+    print("start to process,pls wait for a moment.....\n")
     read_cfg_file()
     process_multicc_bin()
 
